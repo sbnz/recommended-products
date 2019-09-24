@@ -1,0 +1,28 @@
+For recommended products section on product-page, do you think this logic can work on our theme?
+
+  {% assign recommendations = '' %}
+  {% for tag in product.tags %}
+    {% assign split_tag = tag | split: ':' %}
+    {% if split_tag[0] == 'related' %}
+      {% if recommendations != '' %}
+        {% assign recommendations = recommendations | append: ',' %}
+      {% endif %}
+      {% assign related_handle = split_tag[1] | handle %}
+      {% assign recommendations = recommendations | append: related_handle %}
+    {% endif %}
+  {% endfor %}
+  {% assign recommendations = recommendations | split: ',' %}
+  <!-- `recommendations` liquid variable now holds an array of product handles -->
+
+  {% if recommendations != empty %}
+    {% for product_handle in recommendations %}
+      {% assign product = all_products[product_handle] %}
+      <!-- Normal HTML & Liquid here, using `product` as reference to iteratee -->
+
+    {% endfor %}
+  {% else %}
+    {% for product in collections.collection-title.products limit:3 %}
+        <!-- Normal HTML & Liquid here, using `product` as reference to iteratee -->
+
+    {% endfor %}
+  {% endif %}
